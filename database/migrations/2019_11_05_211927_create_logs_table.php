@@ -20,9 +20,11 @@ class CreateLogsTable extends Migration
             $table->string('level');
             $table->string('descricao');
             $table->string('origem');
-            $table->timestamp('created_at');
             $table->integer('eventos');
             $table->boolean('arquivado');
+            $table->text('detalhe');
+            $table->string('titulo');
+            $table->timestamps();
 
             $table->foreign('user_id')
                 ->references('id')

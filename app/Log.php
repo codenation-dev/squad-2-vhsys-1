@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Log extends Model
 {
     protected $fillable = [
-        'ambiente','level','descricao','origem','created_at','arquivado','eventos'
+        'ambiente','level','descricao','origem','arquivado','eventos','detalhe','titulo'
     ];
 
-    public function details()
-    {
-        return $this->hasMany(Detail::class);
-    }
+//    public function details()
+//    {
+//        return $this->hasMany(Detail::class);
+//    }
 
 }
