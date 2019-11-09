@@ -13,7 +13,8 @@
 ### 9) Abra com algum editor o arquivo .env e altere as credenciais do banco de dados: DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME e DB_PASSWORD
 ### 10) Para rodar os migrates para a criacao das tabela use o seguinte comando:
     $ php artisan migrate
-### 11) Para testar as rotas: php artisan serve
+### 11) Para gerar a chave base JWT: php artisan jwt:secret    
+### 12) Para testar as rotas: php artisan serve
 
 
    
