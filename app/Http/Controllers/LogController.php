@@ -18,19 +18,41 @@ class LogController extends Controller
     }
 
 
-    //Nesse get temos o default: ambiente eh producao e o log nao esta arquivado
-    public function index()
+    public function index(Request $request)
     {
-        return $this->user
-            ->logs()
-            ->where('arquivado',false)
-            ->where('ambiente','producao')
+        $ambiente = $request->get('ambiente');
+        $chave = $request->get('chave');
+        $valor = $request->get('valor');
+        $order = $request->get('order');
+
+        $qb = $this->user
+            ->logs();
+
+        if ($ambiente) 
+            $qb->where('ambiente', $ambiente);
+
+        if (($chave) && ($valor))
+            $qb->where($chave, $valor);
+        
+        if ($order)
+            $qb->orderBy($order);
+        
+        $logs = $qb
             ->get()
-            ->toArray();
+            ->toArray();        
+
+        if(!$logs) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nenhum log encontrado.'
+            ], 400);
+        }
+        
+        return $logs;
     }
 
 
-    public function show(Integer $id)
+    public function show($id)
     {
         $log = $this->user->logs()->find($id);
 
@@ -133,59 +155,4 @@ class LogController extends Controller
         }
 
     }
-
-    public function findLevel(String $level)
-    {
-        $logs = $this->user
-            ->logs()
-            ->where('level', $level)
-            ->get()
-            ->toArray();
-
-        if(!$logs) {
-            return response()->json([
-                'success' => false,
-                'message' => 'O log com o Level ' . $level . ' não foi encontrado.'
-            ], 400);
-        }
-
-        return $logs;        
-    }
-
-    public function findDescricao(String $descricao)
-    {
-        $logs = $this->user
-            ->logs()
-            ->where('descricao', $descricao)
-            ->get()
-            ->toArray();
-
-        if(!$logs) {
-            return response()->json([
-                'success' => false,
-                'message' => 'O log com a Descrição ' . $descricao . ' não foi encontrado.'
-            ], 400);
-        }
-
-        return $logs; 
-    }
-
-    public function findOrigem(String $origem)
-    {
-        $logs = $this->user
-            ->logs()
-            ->where('origem', $origem)
-            ->get()
-            ->toArray();
-
-        if(!$logs) {
-            return response()->json([
-                'success' => false,
-                'message' => 'O log com a origem ' . $origem . ' não foi encontrado.'
-            ], 400);
-        }
-
-        return $logs; 
-    }
-
 }
