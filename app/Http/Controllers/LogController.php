@@ -29,15 +29,14 @@ class LogController extends Controller
             ->toArray();
     }
 
-
     public function show(Integer $id)
     {
         $log = $this->user->logs()->find($id);
 
-        if(!$log) {
+        if(!log) {
             return response()->json([
                 'success' => false,
-                'message' => 'Product with id ' . $id . ' cannot be found'
+                'message' => 'Product with id ' . $id . 'cannot be found'
             ], 400);
         }
 
@@ -132,60 +131,6 @@ class LogController extends Controller
             ], 500);
         }
 
-    }
-
-    public function findLevel(String $level)
-    {
-        $logs = $this->user
-            ->logs()
-            ->where('level', $level)
-            ->get()
-            ->toArray();
-
-        if(!$logs) {
-            return response()->json([
-                'success' => false,
-                'message' => 'O log com o Level ' . $level . ' não foi encontrado.'
-            ], 400);
-        }
-
-        return $logs;        
-    }
-
-    public function findDescricao(String $descricao)
-    {
-        $logs = $this->user
-            ->logs()
-            ->where('descricao', $descricao)
-            ->get()
-            ->toArray();
-
-        if(!$logs) {
-            return response()->json([
-                'success' => false,
-                'message' => 'O log com a Descrição ' . $descricao . ' não foi encontrado.'
-            ], 400);
-        }
-
-        return $logs; 
-    }
-
-    public function findOrigem(String $origem)
-    {
-        $logs = $this->user
-            ->logs()
-            ->where('origem', $origem)
-            ->get()
-            ->toArray();
-
-        if(!$logs) {
-            return response()->json([
-                'success' => false,
-                'message' => 'O log com a origem ' . $origem . ' não foi encontrado.'
-            ], 400);
-        }
-
-        return $logs; 
     }
 
 }

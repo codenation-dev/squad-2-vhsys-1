@@ -25,7 +25,4 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('logs', 'LogController@store');
     Route::put('logs/{id}', 'LogController@update');
     Route::delete('logs/{id}', 'LogController@destroy');
-    Route::get('logs/level/{level}', 'LogController@findLevel');        
-    Route::get('logs/descricao/{descricao}', 'LogController@findDescricao');
-    Route::get('logs/origem/{origem}', 'LogController@findOrigem');        
 });
