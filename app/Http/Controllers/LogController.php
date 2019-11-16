@@ -20,6 +20,17 @@ class LogController extends Controller
 
     public function index(Request $request)
     {
+        try {
+            $request->validate([
+                'ambiente' => 'required|in:dev,produção,homologação',
+                'chave' => 'required',
+                'valor' => 'required',
+                'order' => 'nullable'
+            ]);
+        } catch(\Exception $exception){
+            return response('Parâmetros Inválidos', 400);
+        }
+
         $ambiente = $request->get('ambiente');
         $chave = $request->get('chave');
         $valor = $request->get('valor');
