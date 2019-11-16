@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Log;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use phpDocumentor\Reflection\Types\Integer;
 use JWTAuth;
 
@@ -17,17 +18,17 @@ class LogController extends Controller
         $this->user = JWTAuth::parseToken()->authenticate();
     }
 
-
     public function index(Request $request)
     {
         try {
             $request->validate([
-                'ambiente' => 'required|in:dev,produção,homologação',
+                'ambiente' => [Rule::in(Log::$TipoAmbienteLogs), 'required'],
                 'chave' => 'required',
                 'valor' => 'required',
                 'order' => 'nullable'
             ]);
-        } catch(\Exception $exception){
+        } catch(\Exception $exception)
+        {
             return response('Parâmetros Inválidos', 400);
         }
 
@@ -50,14 +51,7 @@ class LogController extends Controller
         
         $logs = $qb
             ->get()
-            ->toArray();        
-
-        if(!$logs) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Nenhum log encontrado.'
-            ], 400);
-        }
+            ->toArray();
         
         return $logs;
     }
