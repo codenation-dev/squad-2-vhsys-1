@@ -23,9 +23,9 @@ class LogController extends Controller
         try {
             $request->validate([
                 'ambiente' => [Rule::in(Log::$TipoAmbienteLogs), 'required'],
-                'chave' => 'required',
-                'valor' => 'required',
-                'order' => 'nullable'
+                'chave' => ['nullable', Rule::in(Log::$FiltroLogs)],
+                'valor' => ['nullable'],
+                'order' => ['nullable', Rule::in(Log::$OrdenacaoLogs)]
             ]);
         } catch(\Exception $exception)
         {

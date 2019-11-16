@@ -69,11 +69,7 @@ class ApiController extends Controller
 
     public function getAuthUser(Request $request)
     {
-        $this->validate($request, [
-            'token' => 'required'
-        ]);
-
-        $user = JWTAuth::authenticate($request->token);
+        $user = JWTAuth::authenticate($request->header('Authorization'));
 
         return response()->json([
             'user' => $user],200);

@@ -11,6 +11,10 @@ class Log extends Model
     const HOMOLOGACAO = 'homologação';
     public static $TipoAmbienteLogs = [self::DEV, self::PRODUCAO, self::HOMOLOGACAO];
 
+    public static $FiltroLogs = ['level', 'descricao', 'origem'];
+
+    public static $OrdenacaoLogs = ['level', 'frequencia'];
+
     protected $fillable = [
         'ambiente','level','descricao','origem','arquivado','eventos','detalhe','titulo'
     ];
