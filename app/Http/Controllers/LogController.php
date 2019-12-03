@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Log;
+use App\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use phpDocumentor\Reflection\Types\Integer;
 use JWTAuth;
 
 class LogController extends Controller
@@ -40,19 +39,19 @@ class LogController extends Controller
         $qb = $this->user
             ->logs();
 
-        if ($ambiente) 
+        if ($ambiente)
             $qb->where('ambiente', $ambiente);
 
         if (($chave) && ($valor))
             $qb->where($chave, $valor);
-        
+
         if ($order)
             $qb->orderBy($order);
-        
+
         $logs = $qb
             ->get()
             ->toArray();
-        
+
         return $logs;
     }
 
