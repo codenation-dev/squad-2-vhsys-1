@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use JWTAuth;
 
 class LogController extends Controller
@@ -26,7 +27,7 @@ class LogController extends Controller
                 'valor' => ['nullable'],
                 'order' => ['nullable', Rule::in(Log::$OrdenacaoLogs)]
             ]);
-        } catch(\Exception $exception)
+        } catch(ValidationException $exception)
         {
             return response('Parâmetros Inválidos', 400);
         }
