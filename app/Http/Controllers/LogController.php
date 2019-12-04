@@ -18,7 +18,7 @@ class LogController extends Controller
         $this->user = JWTAuth::parseToken()->authenticate();
     }
 
-    public function index(Request $request)
+    public function filter(Request $request)
     {
         try {
             $request->validate([
@@ -56,7 +56,6 @@ class LogController extends Controller
         return $logs;
     }
 
-
     public function show($id)
     {
         $log = $this->user->logs()->find($id);
@@ -71,21 +70,22 @@ class LogController extends Controller
         return $log;
     }
 
-    public function store (Request $request)
+    public function store(Request $request)
     {
-        $this->validate($request, [
-
-            //Criar mais validates para os campos poderem assumir apenas os valores do dominio correto
-            //Criar Request personalizada e fazer a validacao em nessa outra classe de request
-
-            'ambiente' => 'required',
-            'level' => 'required',
-            'descricao' => 'required',
-            'origem' => 'required',
-            'eventos' => 'required|integer', //Tirar duvida do que seria esse campo
-            'detalhe' =>'required', //Tirar duvida se realmente detalhe eh required e se ele eh um campo do tipo text mesmo
-            'titulo' => 'required' //Tirar duvida se realmente eh required
+        try {
+            $this->validate($request, [
+                'ambiente' => [Rule::in(Log::$TipoAmbienteLogs), 'required'],
+                'level' => [Rule::in(Log::$TipoLevelLogs), 'required'],
+                'descricao' => 'required',
+                'origem' => 'required',
+                'eventos' => 'required|integer', //Tirar duvida do que seria esse campo
+                'detalhe' =>'required',
+                'titulo' => 'required'
         ]);
+        } catch(ValidationException $exception)
+        {
+            return response('Parâmetros Inválidos', 400);
+        }
 
         $log = new Log();
         $log->ambiente = $request->ambiente;

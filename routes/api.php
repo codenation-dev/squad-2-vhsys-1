@@ -20,9 +20,9 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('logout', 'ApiController@logout');
     Route::get('user', 'ApiController@getAuthUser');
 
-    Route::get('logs', 'LogController@index');
+    Route::get('logs', 'LogController@filter');
     Route::get('logs/{id}', 'LogController@show');
     Route::post('logs', 'LogController@store');
     Route::put('logs/{id}', 'LogController@update');
-    Route::delete('logs/{id}', 'LogController@destroy');  
+    Route::delete('logs/{id}', 'LogController@destroy');
 });

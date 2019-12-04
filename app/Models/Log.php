@@ -11,6 +11,11 @@ class Log extends Model
     const HOMOLOGACAO = 'homologação';
     public static $TipoAmbienteLogs = [self::DEV, self::PRODUCAO, self::HOMOLOGACAO];
 
+    const ERROR = 'error';
+    const WARNING = 'warning';
+    const DEBUG = 'debug';
+    public static $TipoLevelLogs = [self::ERROR, self::WARNING, self::DEBUG];
+
     public static $FiltroLogs = ['level', 'descricao', 'origem'];
 
     public static $OrdenacaoLogs = ['level', 'frequencia'];
