@@ -38,6 +38,7 @@ class LogController extends Controller
         $order = $request->get('order');
 
         $qb = $this->user
+            ->logsOcorrencias()
             ->logs();
 
         if ($ambiente)
@@ -58,7 +59,7 @@ class LogController extends Controller
 
     public function show($id)
     {
-        $log = $this->user->logs()->find($id);
+        $log = $this->user->logsOcorrencias()->logs()->find($id);
 
         if(!$log) {
             return response()->json([
@@ -78,7 +79,6 @@ class LogController extends Controller
                 'level' => [Rule::in(Log::$TipoLevelLogs), 'required'],
                 'descricao' => 'required',
                 'origem' => 'required',
-                'eventos' => 'required|integer', //Tirar duvida do que seria esse campo
                 'detalhe' =>'required',
                 'titulo' => 'required'
         ]);
@@ -87,17 +87,29 @@ class LogController extends Controller
             return response('Parâmetros Inválidos', 400);
         }
 
-        $log = new Log();
-        $log->ambiente = $request->ambiente;
-        $log->level = $request->level;
-        $log->descricao = $request->descricao;
-        $log->origem = $request->origem;
-        $log->eventos = $request->eventos;
-        $log->detalhe = $request->detalhe;
-        $log->titulo = $request->titulo;
-        $log->arquivado = false;
+        $qb = $this->user
+            ->logsOcorrencias();/*
+            ->logs()
+            ->where('ambiente', $request->ambiente)
+            ->where('level', $request->level)
+            ->where('descricao', $request->descricao);*/
 
-        if ($this->user->logs()->save($log)) {
+        $log = $qb
+            ->get()
+            ->toArray();
+
+        if (!$log) {
+            $log = new Log();
+            $log->ambiente = $request->ambiente;
+            $log->level = $request->level;
+            $log->descricao = $request->descricao;
+            $log->origem = $request->origem;
+            $log->detalhe = $request->detalhe;
+            $log->titulo = $request->titulo;
+            $log->arquivado = false;
+        }
+
+        if ($this->user->logsOcorrencias()->save($log)) {
             return response()->json([
                 'success' => true,
                 'log' => $log
@@ -113,7 +125,7 @@ class LogController extends Controller
 
     public function update(Request $request, $id)
     {
-        $log = $this->user->logs()->find($id);
+        $log = $this->user->logsOcorrencias()->logs()->find($id);
 
         if(!$log) {
             return response()->json([
@@ -138,7 +150,7 @@ class LogController extends Controller
 
     public function destroy($id)
     {
-        $log = $this->user->logs()->find($id);
+        $log = $this->user->logsOcorrencias()->logs()->find($id);
 
 
         if(!$log) {

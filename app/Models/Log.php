@@ -21,6 +21,11 @@ class Log extends Model
     public static $OrdenacaoLogs = ['level', 'frequencia'];
 
     protected $fillable = [
-        'ambiente','level','descricao','origem','arquivado','eventos','detalhe','titulo'
+        'ambiente','level','descricao','origem','arquivado','detalhe','titulo'
     ];
+
+    public function logsOcorrencias()
+    {
+        return $this->hasMany(LogsOcorrencia::class);
+    }
 }
