@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Log extends Model
 {
+    protected $appends = ['eventos'];
+
+    public function getEventosAttribute()
+    {
+        return LogsOcorrencia::where('id_log', $this->id)->count();
+    }
+
     const DEV = 'dev';
     const PRODUCAO = 'produção';
     const HOMOLOGACAO = 'homologação';

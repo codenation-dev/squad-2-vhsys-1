@@ -6,17 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class LogsOcorrencia extends Model
 {
-  /*
-    protected function setKeysForSaveQuery(Builder $query)
-    {
-        $query
-            ->where('id_log', '=', $this->getAttribute('id_log'))
-            ->where('data_inclusao', '=', $this->getAttribute('data_inclusao'));
-        return $query;
-    }
-*/
+    public $timestamps = false;
+
+    protected $fillable = [
+        'id_log'
+    ];
+
     public function logs()
     {
-        return $this->belongsTo('App\Models\Log');
+        return $this->belongsTo('App\Models\Log', 'Id', 'id_log');
     }
+    
+    public function users()
+    {
+        return $this->belongsTo('App\Models\User', 'Id', 'id_user');
+    }    
 }

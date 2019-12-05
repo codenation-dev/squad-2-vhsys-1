@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Log;
+use App\Models\LogsOcorrencia;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -37,29 +38,23 @@ class LogController extends Controller
         $valor = $request->get('valor');
         $order = $request->get('order');
 
-        $qb = $this->user
-            ->logsOcorrencias()
-            ->logs();
-
-        if ($ambiente)
-            $qb->where('ambiente', $ambiente);
+        $qq = Log::where('ambiente', $ambiente);
 
         if (($chave) && ($valor))
-            $qb->where($chave, $valor);
+            $qq->where($chave, $valor);
 
         if ($order)
-            $qb->orderBy($order);
+            $qq->orderBy($order);
 
-        $logs = $qb
-            ->get()
-            ->toArray();
+        $logs = $qq
+                ->get();
 
         return $logs;
     }
 
     public function show($id)
     {
-        $log = $this->user->logsOcorrencias()->logs()->find($id);
+        $log = Log::find($id);
 
         if(!$log) {
             return response()->json([
@@ -87,16 +82,11 @@ class LogController extends Controller
             return response('Parâmetros Inválidos', 400);
         }
 
-        $qb = $this->user
-            ->logsOcorrencias();/*
-            ->logs()
-            ->where('ambiente', $request->ambiente)
+        $log = Log::where('ambiente', $request->ambiente)
             ->where('level', $request->level)
-            ->where('descricao', $request->descricao);*/
-
-        $log = $qb
+            ->where('descricao', $request->descricao)
             ->get()
-            ->toArray();
+            ->first();
 
         if (!$log) {
             $log = new Log();
@@ -107,9 +97,18 @@ class LogController extends Controller
             $log->detalhe = $request->detalhe;
             $log->titulo = $request->titulo;
             $log->arquivado = false;
+            if (!($log->save()))
+            {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Não foi possível adicionar o Log'
+                ]);
+            }
         }
 
-        if ($this->user->logsOcorrencias()->save($log)) {
+        $logOcorrencia = new LogsOcorrencia();
+        $logOcorrencia->id_log = $log->id;
+        if ($this->user->logsOcorrencias()->save($logOcorrencia)) {
             return response()->json([
                 'success' => true,
                 'log' => $log
@@ -118,7 +117,7 @@ class LogController extends Controller
         else{
             return response()->json([
                 'success' => false,
-                'message' => 'Product could not be added'
+                'message' => 'Não foi possível adicionar o Log'
             ]);
         }
     }
