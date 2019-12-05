@@ -9,16 +9,16 @@ class LogsOcorrencia extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id_log'
+        'log_id'
     ];
 
     public function logs()
     {
-        return $this->belongsTo('App\Models\Log', 'Id', 'id_log');
+        return $this->belongsTo('App\Models\Log', 'id', 'log_id');
     }
     
     public function users()
     {
-        return $this->belongsTo('App\Models\User', 'Id', 'id_user');
+        return $this->belongsTo('App\Models\User', 'id', 'user_id');
     }    
 }

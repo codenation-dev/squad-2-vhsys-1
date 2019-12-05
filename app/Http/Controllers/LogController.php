@@ -59,7 +59,7 @@ class LogController extends Controller
         if(!$log) {
             return response()->json([
                 'success' => false,
-                'message' => 'Product with id ' . $id . ' cannot be found'
+                'message' => 'Log com o ID ' . $id . ' não encontrado.'
             ], 400);
         }
 
@@ -75,8 +75,7 @@ class LogController extends Controller
                 'descricao' => 'required',
                 'origem' => 'required',
                 'detalhe' =>'required',
-                'titulo' => 'required'
-        ]);
+                'titulo' => 'required']);
         } catch(ValidationException $exception)
         {
             return response('Parâmetros Inválidos', 400);
@@ -101,13 +100,13 @@ class LogController extends Controller
             {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Não foi possível adicionar o Log'
+                    'message' => 'Não foi possível adicionar o Log.'
                 ]);
             }
         }
 
         $logOcorrencia = new LogsOcorrencia();
-        $logOcorrencia->id_log = $log->id;
+        $logOcorrencia->log_id = $log->id;
         if ($this->user->logsOcorrencias()->save($logOcorrencia)) {
             return response()->json([
                 'success' => true,
@@ -117,19 +116,19 @@ class LogController extends Controller
         else{
             return response()->json([
                 'success' => false,
-                'message' => 'Não foi possível adicionar o Log'
+                'message' => 'Não foi possível adicionar o Log.'
             ]);
         }
     }
 
     public function update(Request $request, $id)
     {
-        $log = $this->user->logsOcorrencias()->logs()->find($id);
+        $log = Log::find($id);
 
         if(!$log) {
             return response()->json([
                 'success' => false,
-                'message' => 'Product with id ' .$id. ' cannot be found'
+                'message' => 'Log com o ID ' . $id . ' não encontrado.'
             ], 400);
         }
 
@@ -142,20 +141,19 @@ class LogController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Product could not be updated'
+                'message' => 'Log não pode ser atualizado.'
             ], 500);
         }
     }
 
     public function destroy($id)
     {
-        $log = $this->user->logsOcorrencias()->logs()->find($id);
-
+        $log = Log::find($id);
 
         if(!$log) {
             return response()->json([
                 'success' => false,
-                'message' => 'Product with id ' . $id . 'cannot be found'
+                'message' => 'Log com o ID ' . $id . ' não encontrado.'
             ], 400);
         }
 
@@ -166,7 +164,7 @@ class LogController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Product could not be deleted'
+                'message' => 'Log não pode ser excluído.'
             ], 500);
         }
 

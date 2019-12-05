@@ -8,10 +8,9 @@ class Log extends Model
 {
     protected $appends = ['eventos'];
 
-    public function getEventosAttribute()
-    {
-        return LogsOcorrencia::where('id_log', $this->id)->count();
-    }
+    protected $fillable = [
+        'ambiente','level','descricao','origem','arquivado','detalhe','titulo'
+    ];
 
     const DEV = 'dev';
     const PRODUCAO = 'produção';
@@ -27,12 +26,13 @@ class Log extends Model
 
     public static $OrdenacaoLogs = ['level', 'frequencia'];
 
-    protected $fillable = [
-        'ambiente','level','descricao','origem','arquivado','detalhe','titulo'
-    ];
+    public function getEventosAttribute()
+    {
+        return $this->logsOcorrencias->count('id');
+    }
 
     public function logsOcorrencias()
     {
-        return $this->hasMany(LogsOcorrencia::class);
+        return $this->hasMany(LogsOcorrencia::class, 'log_id');
     }
 }

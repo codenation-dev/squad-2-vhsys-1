@@ -16,8 +16,8 @@ class CreateLogsOcorrenciasTable extends Migration
         Schema::create('logs_ocorrencias', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('id_log')->unsigned();
-            $table->foreign('id_log')
+            $table->integer('log_id')->unsigned();
+            $table->foreign('log_id')
                 ->references('id')
                 ->on('logs')
                 ->onDelete('cascade');
