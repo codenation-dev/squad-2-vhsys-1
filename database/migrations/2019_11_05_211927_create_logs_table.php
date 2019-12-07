@@ -19,10 +19,10 @@ class CreateLogsTable extends Migration
             $table->string('level');
             $table->string('descricao');
             $table->string('origem');
-            $table->boolean('arquivado');
+            $table->boolean('arquivado')->default(false);
             $table->text('detalhe');
             $table->string('titulo');
-            $table->integer('eventos');
+            $table->integer('eventos')->default(0);
             $table->timestamps();
         });
     }

@@ -98,8 +98,7 @@ class LogController extends Controller
             $log->origem = $request->origem;
             $log->detalhe = $request->detalhe;
             $log->titulo = $request->titulo;
-            $log->arquivado = false;
-            
+
             if (!($log->save()))
             {
                 return response()->json([
@@ -111,10 +110,10 @@ class LogController extends Controller
 
         $logOcorrencia = new LogsOcorrencia();
         $logOcorrencia->log_id = $log->id;
-        
+
         if ($this->user->logsOcorrencias()->save($logOcorrencia)) {
             $log->eventos = $log->logsOcorrencias->count('id');
-            
+
             if ($log->save()) {
                 return response()->json([
                     'success' => true,
