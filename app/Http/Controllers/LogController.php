@@ -38,16 +38,17 @@ class LogController extends Controller
         $valor = $request->get('valor');
         $order = $request->get('order');
 
-        $qq = Log::where('ambiente', $ambiente);
+        $qq = Log::where('ambiente', $ambiente)
+                    ->where('arquivado', 0);
 
         if (($chave) && ($valor))
             $qq->where($chave, $valor);
 
-        if ($order)
-            $qq->orderBy($order);
-
         $logs = $qq
                 ->get();
+
+        if ($order)
+        $logs->sortBy($order);
 
         return $logs;
     }
@@ -84,6 +85,7 @@ class LogController extends Controller
         $log = Log::where('ambiente', $request->ambiente)
             ->where('level', $request->level)
             ->where('descricao', $request->descricao)
+            ->where('titulo', $request->titulo)
             ->get()
             ->first();
 

@@ -24,7 +24,7 @@ class Log extends Model
 
     public static $FiltroLogs = ['level', 'descricao', 'origem'];
 
-    public static $OrdenacaoLogs = ['level', 'frequencia'];
+    public static $OrdenacaoLogs = ['level', 'eventos'];
 
     public function getEventosAttribute()
     {
