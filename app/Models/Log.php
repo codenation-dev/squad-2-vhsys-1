@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Log extends Model
 {
+    protected $appends = ['eventos'];
+
+    protected $fillable = [
+        'ambiente','level','descricao','origem','arquivado','detalhe','titulo'
+    ];
+
     const DEV = 'dev';
     const PRODUCAO = 'produção';
     const HOMOLOGACAO = 'homologação';
@@ -18,9 +24,15 @@ class Log extends Model
 
     public static $FiltroLogs = ['level', 'descricao', 'origem'];
 
-    public static $OrdenacaoLogs = ['level', 'frequencia'];
+    public static $OrdenacaoLogs = ['level', 'eventos'];
 
-    protected $fillable = [
-        'ambiente','level','descricao','origem','arquivado','eventos','detalhe','titulo'
-    ];
+    public function getEventosAttribute()
+    {
+        return $this->logsOcorrencias->count('id');
+    }
+
+    public function logsOcorrencias()
+    {
+        return $this->hasMany(LogsOcorrencia::class, 'log_id');
+    }
 }

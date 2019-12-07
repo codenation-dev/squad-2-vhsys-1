@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Log;
+use App\Models\LogsOcorrencia;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -37,33 +38,29 @@ class LogController extends Controller
         $valor = $request->get('valor');
         $order = $request->get('order');
 
-        $qb = $this->user
-            ->logs();
-
-        if ($ambiente)
-            $qb->where('ambiente', $ambiente);
+        $qq = Log::where('ambiente', $ambiente)
+                    ->where('arquivado', 0);
 
         if (($chave) && ($valor))
-            $qb->where($chave, $valor);
+            $qq->where($chave, $valor);
+
+        $logs = $qq
+                ->get();
 
         if ($order)
-            $qb->orderBy($order);
-
-        $logs = $qb
-            ->get()
-            ->toArray();
+        $logs->sortBy($order);
 
         return $logs;
     }
 
     public function show($id)
     {
-        $log = $this->user->logs()->find($id);
+        $log = Log::find($id);
 
         if(!$log) {
             return response()->json([
                 'success' => false,
-                'message' => 'Product with id ' . $id . ' cannot be found'
+                'message' => 'Log com o ID ' . $id . ' não encontrado.'
             ], 400);
         }
 
@@ -78,26 +75,41 @@ class LogController extends Controller
                 'level' => [Rule::in(Log::$TipoLevelLogs), 'required'],
                 'descricao' => 'required',
                 'origem' => 'required',
-                'eventos' => 'required|integer', //Tirar duvida do que seria esse campo
                 'detalhe' =>'required',
-                'titulo' => 'required'
-        ]);
+                'titulo' => 'required']);
         } catch(ValidationException $exception)
         {
             return response('Parâmetros Inválidos', 400);
         }
 
-        $log = new Log();
-        $log->ambiente = $request->ambiente;
-        $log->level = $request->level;
-        $log->descricao = $request->descricao;
-        $log->origem = $request->origem;
-        $log->eventos = $request->eventos;
-        $log->detalhe = $request->detalhe;
-        $log->titulo = $request->titulo;
-        $log->arquivado = false;
+        $log = Log::where('ambiente', $request->ambiente)
+            ->where('level', $request->level)
+            ->where('descricao', $request->descricao)
+            ->where('titulo', $request->titulo)
+            ->get()
+            ->first();
 
-        if ($this->user->logs()->save($log)) {
+        if (!$log) {
+            $log = new Log();
+            $log->ambiente = $request->ambiente;
+            $log->level = $request->level;
+            $log->descricao = $request->descricao;
+            $log->origem = $request->origem;
+            $log->detalhe = $request->detalhe;
+            $log->titulo = $request->titulo;
+            $log->arquivado = false;
+            if (!($log->save()))
+            {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Não foi possível adicionar o Log.'
+                ]);
+            }
+        }
+
+        $logOcorrencia = new LogsOcorrencia();
+        $logOcorrencia->log_id = $log->id;
+        if ($this->user->logsOcorrencias()->save($logOcorrencia)) {
             return response()->json([
                 'success' => true,
                 'log' => $log
@@ -106,19 +118,19 @@ class LogController extends Controller
         else{
             return response()->json([
                 'success' => false,
-                'message' => 'Product could not be added'
+                'message' => 'Não foi possível adicionar o Log.'
             ]);
         }
     }
 
     public function update(Request $request, $id)
     {
-        $log = $this->user->logs()->find($id);
+        $log = Log::find($id);
 
         if(!$log) {
             return response()->json([
                 'success' => false,
-                'message' => 'Product with id ' .$id. ' cannot be found'
+                'message' => 'Log com o ID ' . $id . ' não encontrado.'
             ], 400);
         }
 
@@ -131,20 +143,19 @@ class LogController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Product could not be updated'
+                'message' => 'Log não pode ser atualizado.'
             ], 500);
         }
     }
 
     public function destroy($id)
     {
-        $log = $this->user->logs()->find($id);
-
+        $log = Log::find($id);
 
         if(!$log) {
             return response()->json([
                 'success' => false,
-                'message' => 'Product with id ' . $id . 'cannot be found'
+                'message' => 'Log com o ID ' . $id . ' não encontrado.'
             ], 400);
         }
 
@@ -155,7 +166,7 @@ class LogController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Product could not be deleted'
+                'message' => 'Log não pode ser excluído.'
             ], 500);
         }
 
