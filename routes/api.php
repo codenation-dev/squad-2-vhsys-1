@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('login', 'ApiController@login');
+Route::post('login', 'ApiController@login')->name('login');
 Route::post('register', 'ApiController@register');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
@@ -22,7 +22,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
 
     Route::get('logs', 'LogController@filter');
     Route::get('logs/{id}', 'LogController@show');
-    Route::post('logs', 'LogController@store');
-    Route::put('logs/{id}', 'LogController@update');
-    Route::delete('logs/{id}', 'LogController@destroy');
+    Route::post('logs', 'LogController@store')->name('store');
+    Route::put('logs/{id}', 'LogController@update')->name('update');
+    Route::delete('logs/{id}', 'LogController@destroy')->name('delete');
 });
