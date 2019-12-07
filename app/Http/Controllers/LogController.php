@@ -41,14 +41,18 @@ class LogController extends Controller
         $qq = Log::where('ambiente', $ambiente)
                     ->where('arquivado', 0);
 
-        if (($chave) && ($valor))
+        if (($chave !== '') && ($valor !== ''))
+        {
             $qq->where($chave, $valor);
+        }
+
+        if ($order !== '')
+        {
+            $qq->orderBy($order);
+        }
 
         $logs = $qq
-                ->get();
-
-        if ($order)
-        $logs->sortBy($order);
+                ->paginate(10);
 
         return $logs;
     }
@@ -110,10 +114,13 @@ class LogController extends Controller
         $logOcorrencia = new LogsOcorrencia();
         $logOcorrencia->log_id = $log->id;
         if ($this->user->logsOcorrencias()->save($logOcorrencia)) {
-            return response()->json([
-                'success' => true,
-                'log' => $log
-            ]);
+            $log->eventos = $log->logsOcorrencias->count('id');
+            if ($log->save()) {
+                return response()->json([
+                    'success' => true,
+                    'log' => $log
+                ]);
+            }
         }
         else{
             return response()->json([

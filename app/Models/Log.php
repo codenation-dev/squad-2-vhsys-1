@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Log extends Model
 {
-    protected $appends = ['eventos'];
-
     protected $fillable = [
         'ambiente','level','descricao','origem','arquivado','detalhe','titulo'
     ];
@@ -25,11 +23,6 @@ class Log extends Model
     public static $FiltroLogs = ['level', 'descricao', 'origem'];
 
     public static $OrdenacaoLogs = ['level', 'eventos'];
-
-    public function getEventosAttribute()
-    {
-        return $this->logsOcorrencias->count('id');
-    }
 
     public function logsOcorrencias()
     {

@@ -22,6 +22,7 @@ class CreateLogsTable extends Migration
             $table->boolean('arquivado');
             $table->text('detalhe');
             $table->string('titulo');
+            $table->integer('eventos');
             $table->timestamps();
         });
     }
