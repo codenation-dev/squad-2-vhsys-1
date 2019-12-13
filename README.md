@@ -18,3 +18,5 @@ https://github.com/brendonhps/central-erros-portal
  7) Crie uma database no seu MYSQL
  8) Abra com algum editor o arquivo .env e altere as credenciais do banco de dados: DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME e DB_PASSWORD
 
+
+   
